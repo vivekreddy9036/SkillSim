@@ -1,0 +1,118 @@
+// SkillSim data model — tracks -> labs -> steps, with per-user session/progress tracking.
+// See plan section 2 (smooth-whistling-forest.md) for the design rationale.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Difficulty {
+  beginner
+  intermediate
+  advanced
+}
+
+enum SessionStatus {
+  running
+  completed
+  expired
+  terminated
+}
+
+enum StepStatus {
+  pending
+  completed
+}
+
+model User {
+  id           String   @id @default(uuid())
+  email        String   @unique
+  passwordHash String
+  displayName  String
+  points       Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  sessions UserLabSession[]
+}
+
+model Track {
+  id          String @id @default(uuid())
+  slug        String @unique
+  name        String
+  description String
+  icon        String?
+
+  labs Lab[]
+}
+
+model Lab {
+  id              String     @id @default(uuid())
+  track           Track      @relation(fields: [trackId], references: [id])
+  trackId         String
+  slug            String     @unique
+  title           String
+  description     String
+  difficulty      Difficulty
+  durationMinutes Int
+  tags            String[]
+  orderInTrack    Int
+  // Built Docker image tag terminal-server spawns from, e.g. "skillsim/docker-basic-commands:latest".
+  // Built ahead of time from labs/<track>/<lab-slug>/Dockerfile — see scripts/sync-labs.ts.
+  imageRef        String
+  // True only for labs that must run their own nested `docker` daemon (Docker-in-Docker).
+  // A narrow, deliberate exception to the default hardening profile — never exposes the
+  // host's docker.sock, still ephemeral/resource-capped/labeled. See terminal-server/src/docker.ts.
+  privileged      Boolean    @default(false)
+
+  steps    LabStep[]
+  sessions UserLabSession[]
+
+  @@index([trackId, orderInTrack])
+}
+
+model LabStep {
+  id                String @id @default(uuid())
+  lab               Lab    @relation(fields: [labId], references: [id])
+  labId             String
+  stepNumber        Int
+  title             String
+  contentMarkdown   String
+  // Filename of the validation script within the lab's steps/ folder, e.g. "01-list-containers.check.sh"
+  validationScript  String
+
+  progress UserStepProgress[]
+
+  @@unique([labId, stepNumber])
+}
+
+model UserLabSession {
+  id          String        @id @default(uuid())
+  user        User          @relation(fields: [userId], references: [id])
+  userId      String
+  lab         Lab           @relation(fields: [labId], references: [id])
+  labId       String
+  containerId String?
+  status      SessionStatus @default(running)
+  startedAt   DateTime      @default(now())
+  endedAt     DateTime?
+
+  stepProgress UserStepProgress[]
+
+  @@index([userId, labId])
+}
+
+model UserStepProgress {
+  id          String         @id @default(uuid())
+  session     UserLabSession @relation(fields: [sessionId], references: [id])
+  sessionId   String
+  step        LabStep        @relation(fields: [stepId], references: [id])
+  stepId      String
+  status      StepStatus     @default(pending)
+  completedAt DateTime?
+
+  @@unique([sessionId, stepId])
+}

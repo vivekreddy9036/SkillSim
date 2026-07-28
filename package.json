@@ -1,0 +1,22 @@
+{
+  "name": "skillsim",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "workspaces": [
+    "frontend",
+    "app-backend",
+    "terminal-server"
+  ],
+  "scripts": {
+    "dev:frontend": "npm run dev --workspace=frontend",
+    "dev:backend": "npm run dev --workspace=app-backend",
+    "dev:terminal": "npm run dev --workspace=terminal-server",
+    "sync-labs": "node --experimental-strip-types scripts/sync-labs.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "dotenv": "^16.4.5",
+    "yaml": "^2.5.1"
+  }
+}

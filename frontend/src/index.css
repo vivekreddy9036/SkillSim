@@ -1,0 +1,68 @@
+@import "highlight.js/styles/github-dark.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-feature-settings: "cv11", "ss01";
+  }
+  body {
+    @apply bg-base-950 text-slate-100 antialiased;
+  }
+  ::selection {
+    @apply bg-indigo-500/30 text-white;
+  }
+}
+
+/* thin, unobtrusive scrollbars everywhere */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgb(51 65 85) transparent;
+}
+*::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  background-color: rgb(51 65 85);
+  border-radius: 9999px;
+}
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgb(71 85 105);
+}
+
+/* lesson-panel markdown */
+.lesson-markdown :is(h1, h2, h3) {
+  @apply text-slate-100 font-semibold;
+}
+.lesson-markdown p {
+  @apply text-slate-300 leading-relaxed;
+}
+.lesson-markdown code:not(pre code) {
+  @apply bg-indigo-500/10 text-indigo-300 rounded px-1.5 py-0.5 text-[0.85em] font-mono;
+}
+.lesson-markdown pre {
+  @apply bg-base-900 border border-white/5 rounded-xl shadow-card overflow-x-auto;
+}
+.lesson-markdown pre code {
+  @apply font-mono text-[0.85em] leading-relaxed;
+}
+.lesson-markdown ul {
+  @apply list-disc list-outside pl-5 text-slate-300 space-y-1;
+}
+.lesson-markdown strong {
+  @apply text-slate-100;
+}
+
+/* xterm.js container polish */
+.xterm {
+  padding: 4px;
+}
+.xterm .xterm-viewport {
+  scrollbar-width: thin;
+}

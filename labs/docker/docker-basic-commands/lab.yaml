@@ -1,0 +1,19 @@
+title: Docker Basic Commands
+slug: docker-basic-commands
+track: docker
+trackName: Docker
+trackDescription: >-
+  Learn containerization with Docker. Master basic commands, images,
+  networking, storage, and Docker Compose for multi-container applications.
+description: Learn essential Docker commands for container management and operations.
+difficulty: beginner
+durationMinutes: 60
+tags:
+  - Docker CLI
+  - Containers
+  - Basic Commands
+orderInTrack: 1
+imageRef: skillsim/docker-basic-commands:latest
+# Runs its own nested dockerd (Docker-in-Docker) — see terminal-server/src/docker.ts
+# for what this exception to the default hardening profile actually changes.
+privileged: true

@@ -1,0 +1,1 @@
+{"root":["./src/layout.tsx","./src/api.ts","./src/main.tsx","./src/vite-env.d.ts","./src/components/difficultybadge.tsx","./src/components/terminal.tsx","./src/pages/dashboardpage.tsx","./src/pages/labpage.tsx","./src/pages/trackdetailpage.tsx","./src/pages/trackspage.tsx"],"version":"5.9.3"}
