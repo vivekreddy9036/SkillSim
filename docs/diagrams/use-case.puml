@@ -1,0 +1,61 @@
+@startuml use-case
+title SkillSim - Use Case Diagram
+
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Student" as Student
+actor "Content Author\n(team, file-based)" as Author
+actor "Terminal Server\n(system actor)" as TermServer <<system>>
+
+rectangle "SkillSim Platform" {
+
+  usecase "Sign up" as UC1
+  usecase "Log in" as UC2
+  usecase "Browse tracks" as UC3
+  usecase "View track detail\n(list of labs)" as UC4
+  usecase "View lab detail" as UC5
+  usecase "Start lab\n(issues sandbox JWT)" as UC6
+  usecase "Use interactive terminal\n(WebSocket session)" as UC7
+  usecase "Read step instructions" as UC8
+  usecase "Check step\n(run validation script)" as UC9
+  usecase "Earn points /\ntrack progress" as UC10
+  usecase "View dashboard" as UC11
+
+  usecase "Author lab content\n(lab.yaml + step markdown\n+ *.check.sh)" as UC12
+  usecase "Sync labs into DB\n(scripts/sync-labs.ts)" as UC13
+  usecase "Build lab Docker image" as UC14
+
+  usecase "Spawn ephemeral\nsandbox container" as UC15
+  usecase "Exec validation script\nin container" as UC16
+  usecase "Report step result\nto app-backend" as UC17
+  usecase "Idle-reap session" as UC18
+}
+
+Student --> UC1
+Student --> UC2
+Student --> UC3
+Student --> UC4
+Student --> UC5
+Student --> UC6
+Student --> UC7
+Student --> UC8
+Student --> UC9
+Student --> UC11
+
+UC6 ..> UC15 : <<include>>
+UC7 ..> UC15 : <<include>>
+UC9 ..> UC16 : <<include>>
+UC16 ..> UC17 : <<include>>
+UC17 ..> UC10 : <<include>>
+
+Author --> UC12
+UC12 ..> UC13 : <<include>>
+UC12 ..> UC14 : <<include>>
+
+TermServer --> UC15
+TermServer --> UC16
+TermServer --> UC17
+TermServer --> UC18
+
+@enduml

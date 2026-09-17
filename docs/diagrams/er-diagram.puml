@@ -1,0 +1,103 @@
+@startuml er-diagram
+title SkillSim - Entity Relationship Diagram (Prisma schema)
+
+skinparam linetype ortho
+
+entity "User" as User {
+  * id : UUID <<PK>>
+  --
+  * email : String <<unique>>
+  * passwordHash : String
+  * displayName : String
+  * points : Int = 0
+  * createdAt : DateTime
+}
+
+entity "Track" as Track {
+  * id : UUID <<PK>>
+  --
+  * slug : String <<unique>>
+  * name : String
+  * description : String
+  icon : String
+}
+
+entity "Lab" as Lab {
+  * id : UUID <<PK>>
+  --
+  * trackId : UUID <<FK>>
+  * slug : String <<unique>>
+  * title : String
+  * description : String
+  * difficulty : Difficulty
+  * durationMinutes : Int
+  * tags : String[]
+  * orderInTrack : Int
+  * imageRef : String
+  * privileged : Boolean = false
+}
+
+entity "LabStep" as LabStep {
+  * id : UUID <<PK>>
+  --
+  * labId : UUID <<FK>>
+  * stepNumber : Int
+  * title : String
+  * contentMarkdown : String
+  * validationScript : String
+  --
+  <<unique>> (labId, stepNumber)
+}
+
+entity "UserLabSession" as Session {
+  * id : UUID <<PK>>
+  --
+  * userId : UUID <<FK>>
+  * labId : UUID <<FK>>
+  containerId : String
+  * status : SessionStatus = running
+  * startedAt : DateTime
+  endedAt : DateTime
+}
+
+entity "UserStepProgress" as Progress {
+  * id : UUID <<PK>>
+  --
+  * sessionId : UUID <<FK>>
+  * stepId : UUID <<FK>>
+  * status : StepStatus = pending
+  completedAt : DateTime
+  --
+  <<unique>> (sessionId, stepId)
+}
+
+enum "Difficulty" as Difficulty {
+  beginner
+  intermediate
+  advanced
+}
+
+enum "SessionStatus" as SessionStatus {
+  running
+  completed
+  expired
+  terminated
+}
+
+enum "StepStatus" as StepStatus {
+  pending
+  completed
+}
+
+Track ||--o{ Lab : "has many"
+Lab ||--o{ LabStep : "has many"
+User ||--o{ Session : "has many"
+Lab ||--o{ Session : "has many"
+Session ||--o{ Progress : "has many"
+LabStep ||--o{ Progress : "has many"
+
+Lab ..> Difficulty
+Session ..> SessionStatus
+Progress ..> StepStatus
+
+@enduml

@@ -1,0 +1,80 @@
+@startuml architecture
+title SkillSim - Component / Architecture Diagram
+
+skinparam componentStyle rectangle
+skinparam wrapWidth 200
+
+actor Student
+
+package "Client" {
+  [Frontend\n(Vite + React + TS + Tailwind + xterm.js)] as Frontend
+}
+
+package "Host VM" {
+
+  package "app-backend (Express + TS + Prisma)" {
+    [/auth\n(signup/login)] as Auth
+    [/tracks, /tracks/:slug] as Catalog
+    [/labs/:slug] as LabDetail
+    [/labs/:slug/start\n(issues sandbox JWT)] as LabStart
+    [/internal/progress\n(shared-secret protected)] as Internal
+  }
+
+  database "Postgres" as DB
+
+  package "terminal-server (Express + ws + dockerode)" {
+    [WS Upgrade Handler /term\n(verifies JWT + Origin)] as WsUpgrade
+    [Session Manager\n(spawn/reap containers)] as SessionMgr
+    [docker.ts\nspawnSandboxContainer]  as DockerTs
+  }
+
+  node "Docker Engine" {
+    frame "Ephemeral Sandbox Container(s)" {
+      [Hardened container\n(cap-drop-all, read-only, no-network)] as StdContainer
+      [Privileged DinD container\n(nested docker daemon,\nnarrow exception)] as PrivContainer
+    }
+  }
+}
+
+folder "labs/ (file-based content)" {
+  [lab.yaml + step markdown\n+ *.check.sh validation scripts] as LabContent
+}
+
+Student --> Frontend : browser
+
+Frontend --> Auth : REST (login/signup)
+Frontend --> Catalog : REST (browse tracks/labs)
+Frontend --> LabStart : REST (start lab)
+Frontend ..> WsUpgrade : WebSocket /term\n(JWT sandbox:attach token)
+
+Auth --> DB
+Catalog --> DB
+LabDetail --> DB
+LabStart --> DB : embed step validation\nscript refs in JWT
+
+WsUpgrade --> SessionMgr
+SessionMgr --> DockerTs
+DockerTs --> StdContainer : spawn (default)
+DockerTs --> PrivContainer : spawn (privileged labs only)
+
+SessionMgr ..> StdContainer : exec shell (Tty:true)\nbridge binary frames
+SessionMgr ..> PrivContainer : exec shell (Tty:true)
+
+SessionMgr --> StdContainer : exec *.check.sh\non "check_step"
+SessionMgr --> PrivContainer : exec *.check.sh\non "check_step"
+
+SessionMgr --> Internal : POST result\n(step_result: passed/failed)
+Internal --> DB : persist UserStepProgress\n+ award points
+
+LabContent ..> DB : scripts/sync-labs.ts\n(seeds Track/Lab/LabStep)
+LabContent ..> StdContainer : baked into image\n(imageRef)
+LabContent ..> PrivContainer : baked into image\n(imageRef)
+
+note bottom of PrivContainer
+  Never exposes host docker.sock.
+  Still ephemeral, resource-capped, labeled.
+  Used only when Lab.privileged = true
+  (e.g. docker:24-dind labs).
+end note
+
+@enduml
