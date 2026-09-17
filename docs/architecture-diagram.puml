@@ -1,0 +1,124 @@
+@startuml architecture
+title SkillSim — Component / Architecture Diagram
+
+skinparam componentStyle rectangle
+skinparam wrapWidth 220
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam linetype ortho
+skinparam defaultFontName Helvetica
+skinparam defaultFontSize 12
+
+skinparam package {
+  BorderColor #666666
+  FontStyle bold
+}
+skinparam component {
+  BackgroundColor #F5F7FA
+  BorderColor #444444
+}
+skinparam database {
+  BackgroundColor #FCE8B2
+  BorderColor #8A6D1D
+}
+skinparam node {
+  BackgroundColor #EAEAEA
+  BorderColor #555555
+}
+skinparam folder {
+  BackgroundColor #E6F4EA
+  BorderColor #2E7D32
+}
+
+actor Student
+
+package "Client" #E8F0FE {
+  [Frontend\nVite + React + TS + Tailwind + xterm.js] as Frontend
+}
+
+package "Host VM" {
+
+  package "app-backend  (Express + TS + Prisma)  — :4000" as Backend #E3F2FD {
+    [POST /auth/signup, /auth/login] as Auth
+    [GET /tracks, /tracks/:slug] as Catalog
+    [GET /labs/:slug] as LabDetail
+    [POST /labs/:slug/start\nissues sandbox JWT (TTL 300s)] as LabStart
+    [GET /labs/:slug/sessions/:id/progress\nstep status for split-pane UI] as ProgressPoll
+    [POST /internal/progress\nshared-secret protected] as Internal
+  }
+
+  database "Postgres" as DB
+
+  package "terminal-server  (Express + ws + dockerode)  — :4100" as TermServer #FFF3E0 {
+    [handleUpgrade()\nverifies JWT + Origin on /term] as WsUpgrade
+    [wsServer.ts\nsession map + idle-reap timer\n(900s idle timeout)] as SessionMgr
+    [docker.ts\nspawnSandboxContainer /\nopenInteractiveShell /\nrunValidationScript] as DockerTs
+  }
+
+  node "Docker Engine" #ECEFF1 {
+    frame "Ephemeral Sandbox Container(s)\n(labels: sandbox=true, skillsim.user/session/lab)" {
+      [Hardened container  (default)\ncap-drop=ALL, read-only rootfs,\ntmpfs /tmp, NetworkMode=none] as StdContainer
+      [Privileged DinD container\n(Lab.privileged = true)\nown nested dockerd, no host socket] as PrivContainer
+    }
+  }
+}
+
+folder "labs/  (file-based content)" as LabContent {
+  [lab.yaml + step markdown\n+ *.check.sh validation scripts]
+}
+
+' ---- flows ----
+
+Student --> Frontend : browser
+
+Frontend --> Auth        : REST
+Frontend --> Catalog     : REST
+Frontend --> LabDetail   : REST
+Frontend --> LabStart    : REST
+Frontend --> ProgressPoll: REST (poll status)
+Frontend ..> WsUpgrade   : WebSocket /term\n?token=<sandbox:attach JWT>
+
+Auth        --> DB
+Catalog     --> DB
+LabDetail   --> DB
+LabStart    --> DB : embed step validationScript\nrefs + imageRef in JWT
+ProgressPoll --> DB
+
+WsUpgrade  --> SessionMgr : on successful upgrade
+SessionMgr --> DockerTs
+
+DockerTs --> StdContainer  : spawn (default profile)
+DockerTs --> PrivContainer : spawn (privileged labs only)
+
+SessionMgr ..> StdContainer  : exec /bin/sh (Tty:true)\nbridge binary WS frames
+SessionMgr ..> PrivContainer : exec /bin/sh (Tty:true)
+
+SessionMgr --> StdContainer  : exec *.check.sh\non "check_step" message
+SessionMgr --> PrivContainer : exec *.check.sh\non "check_step" message
+
+SessionMgr --> Internal : POST step_result\n(x-internal-secret header)
+Internal   --> DB       : upsert UserStepProgress\n+ award points (10 / +50 on lab complete)
+
+LabContent ..> DB          : scripts/sync-labs.ts\nseeds Track / Lab / LabStep
+LabContent ..> StdContainer  : baked into image (imageRef)
+LabContent ..> PrivContainer : baked into image (imageRef)
+
+note bottom of PrivContainer
+  Never exposes host docker.sock.
+  Still ephemeral, resource-capped
+  (NanoCpus/Memory/PidsLimit), and labeled.
+  Used only when Lab.privileged = true
+  (e.g. docker:24-dind labs).
+end note
+
+legend right
+  |= Color |= Meaning |
+  |<#E8F0FE>| Client |
+  |<#E3F2FD>| app-backend |
+  |<#FFF3E0>| terminal-server |
+  |<#ECEFF1>| Docker Engine |
+  |<#E6F4EA>| File-based lab content |
+  |<#FCE8B2>| Datastore |
+endlegend
+
+@enduml
