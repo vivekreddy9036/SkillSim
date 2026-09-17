@@ -38,14 +38,31 @@ docker run -d --name skillsim-postgres \
 
 npm run prisma:migrate --workspace=app-backend   # create tables from prisma/schema.prisma
 npm run sync-labs                                # loads labs/ content into Postgres
-
-# build the image each lab's imageRef points at (repeat per lab)
-docker build -t skillsim/docker-basic-commands:latest labs/docker/docker-basic-commands
+npm run build-labs                               # docker build every lab's Dockerfile, tagged per lab.yaml
 
 npm run dev:backend
 npm run dev:terminal
 npm run dev:frontend
 ```
+
+## Labs
+
+The `docker` track currently ships 7 labs, all beginner/intermediate:
+
+| Lab | Focus |
+|---|---|
+| `docker-basic-commands` | `run` / `exec` / `stop` / `rm` |
+| `dockerfile-fundamentals` | Write, build, and run your own image |
+| `docker-images-and-layers` | Pull, tag, and inspect layer history |
+| `docker-volumes` | Named volumes and data persistence |
+| `docker-networking-basics` | User-defined networks and container DNS |
+| `docker-env-and-config` | Runtime config via `-e` / `--env-file` |
+| `docker-compose-basics` | Multi-container apps with `docker compose` |
+
+Each lab is a self-contained `labs/docker/<slug>/` directory (`lab.yaml`,
+`Dockerfile`, `steps/*.md` + `steps/*.check.sh`) — add a new one the same way
+and it picks up `npm run sync-labs` / `npm run build-labs` automatically, no
+code changes required.
 
 Frontend expects the app-backend and terminal-server URLs via `VITE_API_BASE` /
 `VITE_TERMINAL_WS_BASE` env vars (defaults: `http://localhost:4000` and

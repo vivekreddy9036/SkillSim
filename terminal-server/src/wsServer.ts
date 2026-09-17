@@ -139,6 +139,11 @@ export function handleUpgrade(wss: WebSocketServer, req: IncomingMessage, socket
     socket.destroy();
     return;
   }
+  if (sessions.size >= env.maxConcurrentSessions) {
+    socket.write("HTTP/1.1 503 Service Unavailable\r\n\r\n");
+    socket.destroy();
+    return;
+  }
 
   let payload: AttachTokenPayload;
   try {

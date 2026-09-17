@@ -63,6 +63,34 @@ export interface AuthResponse {
   token: string;
 }
 
+export interface DashboardTrackProgress {
+  slug: string;
+  name: string;
+  icon: string | null;
+  labsTotal: number;
+  labsCompleted: number;
+}
+
+export interface DashboardRecentSession {
+  labSlug: string;
+  labTitle: string;
+  trackSlug: string;
+  trackName: string;
+  status: "running" | "completed" | "expired" | "terminated";
+  startedAt: string;
+  stepsCompleted: number;
+  stepsTotal: number;
+}
+
+export interface Dashboard {
+  displayName: string;
+  points: number;
+  labsCompleted: number;
+  totalLabsAvailable: number;
+  tracks: DashboardTrackProgress[];
+  recentSessions: DashboardRecentSession[];
+}
+
 export const signup = (email: string, password: string, displayName: string) =>
   api<AuthResponse>("/auth/signup", { method: "POST", body: JSON.stringify({ email, password, displayName }) });
 
@@ -74,3 +102,4 @@ export const getTrack = (slug: string) => api<TrackDetail>(`/tracks/${slug}`);
 export const getLab = (slug: string) => api<LabDetail>(`/labs/${slug}`);
 export const startLabSession = (slug: string) =>
   api<StartSessionResponse>(`/labs/${slug}/start`, { method: "POST" });
+export const getDashboard = () => api<Dashboard>("/me/dashboard");

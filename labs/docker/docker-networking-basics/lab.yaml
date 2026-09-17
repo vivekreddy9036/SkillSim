@@ -1,0 +1,15 @@
+title: Docker Networking Basics
+slug: docker-networking-basics
+track: docker
+description: Create a user-defined network and connect containers using Docker's built-in DNS.
+difficulty: intermediate
+durationMinutes: 30
+tags:
+  - Networking
+  - DNS
+  - Bridge
+orderInTrack: 5
+imageRef: skillsim/docker-networking-basics:latest
+# Runs its own nested dockerd (Docker-in-Docker) — see terminal-server/src/docker.ts
+# for what this exception to the default hardening profile actually changes.
+privileged: true

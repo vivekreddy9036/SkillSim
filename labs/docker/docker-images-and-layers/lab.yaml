@@ -1,0 +1,15 @@
+title: Docker Images and Layers
+slug: docker-images-and-layers
+track: docker
+description: Pull, tag, and inspect images to understand how layers are built and cached.
+difficulty: beginner
+durationMinutes: 25
+tags:
+  - Images
+  - Layers
+  - Registry
+orderInTrack: 3
+imageRef: skillsim/docker-images-and-layers:latest
+# Runs its own nested dockerd (Docker-in-Docker) — see terminal-server/src/docker.ts
+# for what this exception to the default hardening profile actually changes.
+privileged: true

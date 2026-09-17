@@ -1,0 +1,15 @@
+title: Docker Compose Basics
+slug: docker-compose-basics
+track: docker
+description: Define and run a multi-container app declaratively with a docker-compose.yml file.
+difficulty: intermediate
+durationMinutes: 35
+tags:
+  - Compose
+  - Multi-Container
+  - Orchestration
+orderInTrack: 7
+imageRef: skillsim/docker-compose-basics:latest
+# Runs its own nested dockerd (Docker-in-Docker) — see terminal-server/src/docker.ts
+# for what this exception to the default hardening profile actually changes.
+privileged: true

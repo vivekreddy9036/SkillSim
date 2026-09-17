@@ -12,4 +12,7 @@ export const env = {
   sandboxJwtSecret: required("SANDBOX_JWT_SECRET"),
   sandboxJwtTtlSeconds: Number(process.env.SANDBOX_JWT_TTL_SECONDS ?? 300),
   internalServiceSecret: required("INTERNAL_SERVICE_SECRET"),
+  // Comma-separated list of allowed browser origins — mirrors terminal-server's
+  // ALLOWED_ORIGINS so both services reject cross-origin requests the same way.
+  allowedOrigins: (process.env.ALLOWED_ORIGINS ?? "").split(",").map((s) => s.trim()).filter(Boolean),
 };

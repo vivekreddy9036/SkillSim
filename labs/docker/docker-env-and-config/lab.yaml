@@ -1,0 +1,15 @@
+title: Docker Environment and Configuration
+slug: docker-env-and-config
+track: docker
+description: Configure containers at runtime with environment variables instead of baking config into the image.
+difficulty: beginner
+durationMinutes: 20
+tags:
+  - Configuration
+  - Env Vars
+  - Secrets
+orderInTrack: 6
+imageRef: skillsim/docker-env-and-config:latest
+# Runs its own nested dockerd (Docker-in-Docker) — see terminal-server/src/docker.ts
+# for what this exception to the default hardening profile actually changes.
+privileged: true

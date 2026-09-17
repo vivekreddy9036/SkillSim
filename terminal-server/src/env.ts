@@ -17,4 +17,8 @@ export const env = {
   containerPidsLimit: Number(process.env.CONTAINER_PIDS_LIMIT ?? 128),
   idleTimeoutSeconds: Number(process.env.IDLE_TIMEOUT_SECONDS ?? 900),
   idleSweepIntervalSeconds: Number(process.env.IDLE_SWEEP_INTERVAL_SECONDS ?? 60),
+  // Host-wide cap on simultaneously running sandbox containers. Bounds resource
+  // exhaustion (R-01 in the SRS risk analysis) even though every individual
+  // container is already CPU/memory/pids-capped.
+  maxConcurrentSessions: Number(process.env.MAX_CONCURRENT_SESSIONS ?? 20),
 };

@@ -22,14 +22,29 @@ export function LabPage() {
 
   useEffect(() => {
     if (!slug) return;
+    // React 18 StrictMode double-invokes effects in dev: cleanup for the first
+    // invocation runs before this IIFE has even created a WebSocket yet (it's
+    // still awaiting getLab/startLabSession), so a plain `ws?.close()` cleanup
+    // can't cancel it — it would go on to open a second real connection and
+    // spawn a second real sandbox container. `cancelled` makes the abandoned
+    // invocation a no-op instead: if it later creates a socket, it's closed
+    // immediately without ever touching component state.
+    let cancelled = false;
     let ws: WebSocket | undefined;
 
     (async () => {
       const labDetail = await getLab(slug);
+      if (cancelled) return;
       setLab(labDetail);
 
       const { attachToken } = await startLabSession(slug);
+      if (cancelled) return;
+
       ws = new WebSocket(`${TERM_WS_BASE}/term?token=${encodeURIComponent(attachToken)}`);
+      if (cancelled) {
+        ws.close();
+        return;
+      }
       setSocket(ws);
       ws.addEventListener("open", () => setConnected(true));
       ws.addEventListener("close", () => setConnected(false));
@@ -48,7 +63,10 @@ export function LabPage() {
       });
     })();
 
-    return () => ws?.close();
+    return () => {
+      cancelled = true;
+      ws?.close();
+    };
   }, [slug]);
 
   if (!lab) {
@@ -64,7 +82,7 @@ export function LabPage() {
   const done = currentStep >= lab.steps.length;
 
   function checkStep() {
-    if (!socket || !step) return;
+    if (!socket || socket.readyState !== WebSocket.OPEN || !step) return;
     setChecking(true);
     setLastResult(null);
     socket.send(JSON.stringify({ type: "check_step", stepId: step.id }));
@@ -148,7 +166,7 @@ export function LabPage() {
                 <div className="mt-6 flex items-center gap-3">
                   <button
                     onClick={checkStep}
-                    disabled={checking || !socket}
+                    disabled={checking || !connected}
                     className="inline-flex items-center gap-2 rounded-lg bg-brand-gradient px-5 py-2.5 text-sm font-medium text-white shadow-glow disabled:opacity-50 disabled:cursor-not-allowed transition-transform hover:enabled:scale-[1.02]"
                   >
                     {checking && (
