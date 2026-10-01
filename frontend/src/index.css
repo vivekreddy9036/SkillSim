@@ -6,63 +6,80 @@
 
 @layer base {
   html {
-    font-feature-settings: "cv11", "ss01";
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    -webkit-tap-highlight-color: transparent;
   }
   body {
-    @apply bg-base-950 text-slate-100 antialiased;
-  }
-  ::selection {
-    @apply bg-indigo-500/30 text-white;
+    @apply bg-base-950 text-slate-100 antialiased selection:bg-brand-500/30 selection:text-white;
   }
 }
 
-/* thin, unobtrusive scrollbars everywhere */
+/* Precision scrollbars */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgb(51 65 85) transparent;
+  scrollbar-color: rgba(148, 163, 184, 0.2) transparent;
 }
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 *::-webkit-scrollbar-track {
   background: transparent;
 }
 *::-webkit-scrollbar-thumb {
-  background-color: rgb(51 65 85);
+  background-color: rgba(148, 163, 184, 0.2);
   border-radius: 9999px;
 }
 *::-webkit-scrollbar-thumb:hover {
-  background-color: rgb(71 85 105);
+  background-color: rgba(148, 163, 184, 0.4);
 }
 
-/* lesson-panel markdown */
-.lesson-markdown :is(h1, h2, h3) {
-  @apply text-slate-100 font-semibold;
+/* Technical lesson markdown */
+.lesson-markdown h1 {
+  @apply text-xl font-bold text-slate-100 tracking-tight mt-6 mb-3;
+}
+.lesson-markdown h2 {
+  @apply text-base font-semibold text-slate-100 tracking-tight mt-5 mb-2.5 flex items-center gap-2;
+}
+.lesson-markdown h3 {
+  @apply text-sm font-semibold text-slate-200 mt-4 mb-2;
 }
 .lesson-markdown p {
-  @apply text-slate-300 leading-relaxed;
+  @apply text-slate-300 text-sm leading-relaxed mb-3.5;
 }
 .lesson-markdown code:not(pre code) {
-  @apply bg-indigo-500/10 text-indigo-300 rounded px-1.5 py-0.5 text-[0.85em] font-mono;
+  @apply bg-base-800/90 text-blue-300 font-mono text-[0.84em] px-1.5 py-0.5 rounded border border-white/[0.08];
 }
 .lesson-markdown pre {
-  @apply bg-base-900 border border-white/5 rounded-xl shadow-card overflow-x-auto;
+  @apply bg-[#080b12] border border-white/[0.08] rounded-xl shadow-card overflow-x-auto my-3 relative;
 }
 .lesson-markdown pre code {
-  @apply font-mono text-[0.85em] leading-relaxed;
+  @apply font-mono text-[0.85em] leading-relaxed p-4 block;
 }
 .lesson-markdown ul {
-  @apply list-disc list-outside pl-5 text-slate-300 space-y-1;
+  @apply list-disc list-outside pl-5 text-slate-300 text-sm space-y-1.5 mb-4;
+}
+.lesson-markdown ol {
+  @apply list-decimal list-outside pl-5 text-slate-300 text-sm space-y-1.5 mb-4;
+}
+.lesson-markdown li::marker {
+  @apply text-slate-500;
 }
 .lesson-markdown strong {
-  @apply text-slate-100;
+  @apply text-slate-100 font-semibold;
+}
+.lesson-markdown blockquote {
+  @apply border-l-2 border-brand-500/60 bg-brand-500/5 px-4 py-2.5 rounded-r-lg my-3 text-slate-300 text-sm;
 }
 
-/* xterm.js container polish */
+/* xterm.js custom styling */
 .xterm {
-  padding: 4px;
+  padding: 6px 8px;
 }
 .xterm .xterm-viewport {
   scrollbar-width: thin;
+  background-color: transparent !important;
+}
+.xterm .xterm-screen {
+  font-feature-settings: normal;
 }
