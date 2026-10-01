@@ -50,13 +50,13 @@ export function TrackDetailPage() {
   });
 
   return (
-    <div className="min-h-[calc(100vh-57px)] bg-base-950 pb-16">
+    <div className="min-h-[calc(100vh-57px)] bg-surface-0 pb-16">
       {/* Top Track Header Banner */}
-      <div className="bg-grid-fade border-b border-white/[0.08]">
+      <div className="bg-grid-fade border-b border-line/8">
         <div className="max-w-5xl mx-auto px-6 pt-10 pb-10">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-slate-400 hover:text-slate-200 transition-colors mb-5"
+            className="inline-flex items-center gap-1.5 text-xs font-mono font-medium text-ink-dim hover:text-ink-2 transition-colors mb-5"
           >
             <ChevronLeftIcon size={14} />
             <span>Back to Tracks</span>
@@ -65,31 +65,31 @@ export function TrackDetailPage() {
           {track ? (
             <div>
               <div className="flex items-center gap-3.5 mb-3">
-                <div className="h-12 w-12 rounded-xl bg-slate-900 border border-white/[0.08] flex items-center justify-center">
+                <div className="h-12 w-12 rounded-xl bg-surface-2 border border-line/8 flex items-center justify-center">
                   {getTrackIcon(track.slug)}
                 </div>
                 <div>
-                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-100">
+                  <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-ink">
                     {track.name} Track
                   </h1>
-                  <span className="text-xs font-mono text-slate-500">
+                  <span className="text-xs font-mono text-ink-faint">
                     Hands-On Interactive Laboratory Series
                   </span>
                 </div>
               </div>
 
-              <p className="text-slate-300 text-sm max-w-2xl leading-relaxed mt-2">
+              <p className="text-ink-2 text-sm max-w-2xl leading-relaxed mt-2">
                 {track.description}
               </p>
 
               {/* Track Metadata Stats */}
-              <div className="flex flex-wrap items-center gap-6 mt-6 pt-5 border-t border-white/[0.06] text-xs font-mono text-slate-400">
+              <div className="flex flex-wrap items-center gap-6 mt-6 pt-5 border-t border-line/6 text-xs font-mono text-ink-dim">
                 <div className="flex items-center gap-2">
                   <span className="h-2 w-2 rounded-full bg-blue-400" />
-                  <span className="text-slate-200 font-semibold">{track.labs.length} Labs</span>
+                  <span className="text-ink-2 font-semibold">{track.labs.length} Labs</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <ClockIcon size={14} className="text-slate-400" />
+                  <ClockIcon size={14} className="text-ink-dim" />
                   <span>
                     Est. Duration: {hours > 0 ? `${hours}h ` : ""}
                     {remainingMins > 0 ? `${remainingMins}m` : ""}
@@ -115,17 +115,17 @@ export function TrackDetailPage() {
         {/* Filter bar */}
         <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-6">
           <div className="relative flex-1 max-w-sm">
-            <SearchIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-500" />
+            <SearchIcon size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-ink-faint" />
             <input
               type="text"
               placeholder="Filter labs by title or tag..."
               value={labSearch}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLabSearch(e.target.value)}
-              className="w-full bg-[#0a0e17] border border-white/[0.08] rounded-lg pl-9 pr-3 py-2 text-xs text-slate-200 placeholder:text-slate-500 outline-none focus:border-blue-500/50 font-mono"
+              className="w-full bg-surface-1 border border-line/8 rounded-lg pl-9 pr-3 py-2 text-xs text-ink-2 placeholder:text-ink-faint outline-none focus:border-blue-500/50 font-mono"
             />
           </div>
 
-          <div className="flex items-center gap-1 bg-[#0a0e17] border border-white/[0.06] rounded-lg p-1 text-xs font-mono">
+          <div className="flex items-center gap-1 bg-surface-1 border border-line/6 rounded-lg p-1 text-xs font-mono">
             {["all", "beginner", "intermediate", "advanced"].map((diff) => (
               <button
                 key={diff}
@@ -133,8 +133,8 @@ export function TrackDetailPage() {
                 onClick={() => setDifficultyFilter(diff)}
                 className={`px-2.5 py-1 rounded capitalize transition-colors ${
                   difficultyFilter === diff
-                    ? "bg-slate-800 text-slate-100 font-medium"
-                    : "text-slate-500 hover:text-slate-300"
+                    ? "bg-surface-3 text-ink font-medium"
+                    : "text-ink-faint hover:text-ink-2"
                 }`}
               >
                 {diff}
@@ -152,24 +152,24 @@ export function TrackDetailPage() {
               <div
                 key={lab.slug}
                 style={{ animationDelay: `${i * 40}ms` }}
-                className="group animate-fade-up rounded-2xl border border-white/[0.08] bg-[#0c101a] p-5 shadow-card hover:border-blue-500/40 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-5"
+                className="group animate-fade-up rounded-2xl border border-line/8 bg-surface-1 p-5 shadow-card hover:border-blue-500/40 transition-all duration-200 flex flex-col sm:flex-row sm:items-center justify-between gap-5"
               >
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2.5 mb-2">
-                    <span className="text-[11px] font-mono font-medium text-slate-500 bg-slate-900 px-2 py-0.5 rounded border border-white/[0.04]">
+                    <span className="text-[11px] font-mono font-medium text-ink-faint bg-surface-2 px-2 py-0.5 rounded border border-line/4">
                       Lab {String(i + 1).padStart(2, "0")}
                     </span>
                     <DifficultyBadge difficulty={lab.difficulty} />
-                    <span className="text-xs text-slate-500 font-mono flex items-center gap-1">
+                    <span className="text-xs text-ink-faint font-mono flex items-center gap-1">
                       <ClockIcon size={12} />
                       {lab.durationMinutes} min
                     </span>
                   </div>
 
-                  <h3 className="text-base font-bold text-slate-100 group-hover:text-blue-300 transition-colors">
+                  <h3 className="text-base font-bold text-ink group-hover:text-blue-300 transition-colors">
                     {lab.title}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-1 leading-relaxed max-w-2xl">
+                  <p className="text-xs text-ink-dim mt-1 leading-relaxed max-w-2xl">
                     {lab.description}
                   </p>
 
@@ -177,7 +177,7 @@ export function TrackDetailPage() {
                     {lab.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-900/90 text-slate-400 border border-white/[0.05]"
+                        className="text-[11px] font-mono px-2 py-0.5 rounded bg-surface-2/90 text-ink-dim border border-line/5"
                       >
                         #{tag}
                       </span>
@@ -197,7 +197,7 @@ export function TrackDetailPage() {
               </div>
             ))
           ) : (
-            <div className="py-12 text-center rounded-2xl border border-dashed border-white/[0.08] bg-[#0a0d16] text-xs text-slate-500 font-mono">
+            <div className="py-12 text-center rounded-2xl border border-dashed border-line/8 bg-surface-2 text-xs text-ink-faint font-mono">
               No labs match the selected filter.
             </div>
           )}

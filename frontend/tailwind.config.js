@@ -22,18 +22,35 @@ export default {
           600: "#2563eb",
           700: "#1d4ed8",
         },
+        // Theme-reactive tokens: each resolves through a CSS custom property that
+        // flips value under `:root[data-theme="light"]` (see index.css) — swapping
+        // theme never needs a className change, just the data-theme attribute.
+        surface: {
+          0: "rgb(var(--surface-0) / <alpha-value>)",
+          alt: "rgb(var(--surface-0-alt) / <alpha-value>)",
+          1: "rgb(var(--surface-1) / <alpha-value>)",
+          2: "rgb(var(--surface-2) / <alpha-value>)",
+          3: "rgb(var(--surface-3) / <alpha-value>)",
+        },
+        ink: {
+          DEFAULT: "rgb(var(--ink) / <alpha-value>)",
+          2: "rgb(var(--ink-2) / <alpha-value>)",
+          dim: "rgb(var(--ink-dim) / <alpha-value>)",
+          faint: "rgb(var(--ink-faint) / <alpha-value>)",
+        },
+        line: "rgb(var(--line) / <alpha-value>)",
       },
       boxShadow: {
         glow: "0 0 0 1px rgb(59 130 246 / 0.25), 0 4px 20px -2px rgb(59 130 246 / 0.15)",
         glowSuccess: "0 0 0 1px rgb(16 185 129 / 0.3), 0 4px 20px -2px rgb(16 185 129 / 0.2)",
-        card: "0 1px 0 0 rgb(255 255 255 / 0.05) inset, 0 4px 20px -4px rgb(0 0 0 / 0.6)",
-        cardHover: "0 1px 0 0 rgb(255 255 255 / 0.08) inset, 0 12px 32px -8px rgb(0 0 0 / 0.7)",
+        card: "0 1px 0 0 rgb(var(--shadow-inset) / 0.05) inset, 0 4px 20px -4px rgb(0 0 0 / var(--shadow-depth))",
+        cardHover: "0 1px 0 0 rgb(var(--shadow-inset) / 0.08) inset, 0 12px 32px -8px rgb(0 0 0 / var(--shadow-depth))",
       },
       backgroundImage: {
         "grid-fade":
-          "radial-gradient(ellipse 90% 40% at 50% -10%, rgb(59 130 246 / 0.12), transparent 70%), linear-gradient(to bottom, #06080e, #0a0e17)",
+          "radial-gradient(ellipse 90% 40% at 50% -10%, rgb(59 130 246 / 0.12), transparent 70%), linear-gradient(to bottom, rgb(var(--surface-0)), rgb(var(--surface-0-alt)))",
         "subtle-card":
-          "linear-gradient(180deg, rgba(255, 255, 255, 0.03) 0%, rgba(255, 255, 255, 0.01) 100%)",
+          "linear-gradient(180deg, rgb(var(--shadow-inset) / 0.03) 0%, rgb(var(--shadow-inset) / 0.01) 100%)",
       },
       keyframes: {
         "fade-up": {

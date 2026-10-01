@@ -50,18 +50,18 @@ export function AuthPage() {
           <div className="h-12 w-12 rounded-2xl bg-blue-600/20 border border-blue-500/40 flex items-center justify-center text-blue-400 mb-3 shadow-glow">
             <TerminalIcon size={24} />
           </div>
-          <h1 className="text-xl font-bold tracking-tight text-slate-100">
+          <h1 className="text-xl font-bold tracking-tight text-ink">
             SkillSim Platform
           </h1>
-          <p className="text-xs text-slate-400 mt-1 font-mono">
+          <p className="text-xs text-ink-dim mt-1 font-mono">
             Interactive Hands-On Sandbox Environment
           </p>
         </div>
 
         {/* Auth Card */}
-        <div className="rounded-2xl border border-white/[0.08] bg-[#0c101a] shadow-card overflow-hidden">
+        <div className="rounded-2xl border border-line/8 bg-surface-1 shadow-card overflow-hidden">
           {/* Tab Switcher */}
-          <div className="grid grid-cols-2 p-1.5 bg-[#080b12] border-b border-white/[0.06] text-xs font-mono">
+          <div className="grid grid-cols-2 p-1.5 bg-surface-2 border-b border-line/6 text-xs font-mono">
             <button
               type="button"
               onClick={() => {
@@ -70,8 +70,8 @@ export function AuthPage() {
               }}
               className={`py-2 rounded-lg font-medium transition-colors ${
                 mode === "login"
-                  ? "bg-slate-800 text-slate-100 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-surface-3 text-ink shadow-sm"
+                  : "text-ink-dim hover:text-ink-2"
               }`}
             >
               Sign In
@@ -84,8 +84,8 @@ export function AuthPage() {
               }}
               className={`py-2 rounded-lg font-medium transition-colors ${
                 mode === "signup"
-                  ? "bg-slate-800 text-slate-100 shadow-sm"
-                  : "text-slate-400 hover:text-slate-200"
+                  ? "bg-surface-3 text-ink shadow-sm"
+                  : "text-ink-dim hover:text-ink-2"
               }`}
             >
               Register
@@ -95,7 +95,7 @@ export function AuthPage() {
           <form onSubmit={handleSubmit} className="p-6 flex flex-col gap-3.5">
             {mode === "signup" && (
               <div>
-                <label className="block text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">
+                <label className="block text-[11px] font-mono text-ink-dim uppercase tracking-wider mb-1">
                   Full Name
                 </label>
                 <input
@@ -104,13 +104,13 @@ export function AuthPage() {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   required
-                  className="w-full rounded-xl bg-slate-900 border border-white/[0.08] px-3.5 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
+                  className="w-full rounded-xl bg-surface-2 border border-line/8 px-3.5 py-2.5 text-xs text-ink placeholder:text-ink-faint outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
                 />
               </div>
             )}
 
             <div>
-              <label className="block text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-mono text-ink-dim uppercase tracking-wider mb-1">
                 Academic / Student Email
               </label>
               <input
@@ -119,12 +119,12 @@ export function AuthPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                className="w-full rounded-xl bg-slate-900 border border-white/[0.08] px-3.5 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
+                className="w-full rounded-xl bg-surface-2 border border-line/8 px-3.5 py-2.5 text-xs text-ink placeholder:text-ink-faint outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
               />
             </div>
 
             <div>
-              <label className="block text-[11px] font-mono text-slate-400 uppercase tracking-wider mb-1">
+              <label className="block text-[11px] font-mono text-ink-dim uppercase tracking-wider mb-1">
                 Password
               </label>
               <input
@@ -134,7 +134,7 @@ export function AuthPage() {
                 onChange={(e) => setPassword(e.target.value)}
                 required
                 minLength={8}
-                className="w-full rounded-xl bg-slate-900 border border-white/[0.08] px-3.5 py-2.5 text-xs text-slate-100 placeholder:text-slate-500 outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
+                className="w-full rounded-xl bg-surface-2 border border-line/8 px-3.5 py-2.5 text-xs text-ink placeholder:text-ink-faint outline-none focus:border-blue-500/60 focus:ring-1 focus:ring-blue-500/30 transition-all font-mono"
               />
             </div>
 
@@ -161,7 +161,7 @@ export function AuthPage() {
           </form>
 
           {/* Security Notice Footer */}
-          <div className="px-6 py-3 bg-[#080b12] border-t border-white/[0.06] flex items-center gap-2 text-[10px] text-slate-500 font-mono">
+          <div className="px-6 py-3 bg-surface-2 border-t border-line/6 flex items-center gap-2 text-[10px] text-ink-faint font-mono">
             <ShieldCheckIcon size={12} className="text-emerald-400 shrink-0" />
             <span>Encrypted with bcrypt (cost 10) & scoped JWTs</span>
           </div>

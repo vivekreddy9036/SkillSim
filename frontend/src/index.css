@@ -4,13 +4,45 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  /* Dark theme (default) — values match the original hand-tuned hex literals,
+     so dark mode is pixel-identical to before this token system existed. */
+  --surface-0: 6 8 14;
+  --surface-0-alt: 10 14 23;
+  --surface-1: 12 16 26;
+  --surface-2: 10 13 22;
+  --surface-3: 30 41 59;
+  --ink: 241 245 249;
+  --ink-2: 226 232 240;
+  --ink-dim: 148 163 184;
+  --ink-faint: 100 116 139;
+  --line: 255 255 255;
+  --shadow-inset: 255 255 255;
+  --shadow-depth: 0.6;
+}
+
+:root[data-theme="light"] {
+  --surface-0: 244 246 250;
+  --surface-0-alt: 237 240 245;
+  --surface-1: 255 255 255;
+  --surface-2: 241 244 248;
+  --surface-3: 230 234 240;
+  --ink: 15 23 42;
+  --ink-2: 51 65 85;
+  --ink-dim: 100 116 139;
+  --ink-faint: 148 163 184;
+  --line: 15 23 42;
+  --shadow-inset: 15 23 42;
+  --shadow-depth: 0.08;
+}
+
 @layer base {
   html {
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
     -webkit-tap-highlight-color: transparent;
   }
   body {
-    @apply bg-base-950 text-slate-100 antialiased selection:bg-brand-500/30 selection:text-white;
+    @apply bg-surface-0 text-ink antialiased selection:bg-brand-500/30 selection:text-ink transition-colors duration-200;
   }
 }
 
@@ -36,20 +68,27 @@
 
 /* Technical lesson markdown */
 .lesson-markdown h1 {
-  @apply text-xl font-bold text-slate-100 tracking-tight mt-6 mb-3;
+  @apply text-xl font-bold text-ink tracking-tight mt-6 mb-3;
 }
 .lesson-markdown h2 {
-  @apply text-base font-semibold text-slate-100 tracking-tight mt-5 mb-2.5 flex items-center gap-2;
+  @apply text-base font-semibold text-ink tracking-tight mt-5 mb-2.5 flex items-center gap-2;
 }
 .lesson-markdown h3 {
-  @apply text-sm font-semibold text-slate-200 mt-4 mb-2;
+  @apply text-sm font-semibold text-ink-2 mt-4 mb-2;
 }
 .lesson-markdown p {
-  @apply text-slate-300 text-sm leading-relaxed mb-3.5;
+  @apply text-ink-2 text-sm leading-relaxed mb-3.5;
 }
+/* Inline code badge follows the page theme like the rest of the prose.
+   Uses the CSS vars directly — Tailwind's @apply can't expand opacity-modifier
+   utilities (bg-x/90, border-x/8) built on custom colors. */
 .lesson-markdown code:not(pre code) {
-  @apply bg-base-800/90 text-blue-300 font-mono text-[0.84em] px-1.5 py-0.5 rounded border border-white/[0.08];
+  @apply text-blue-400 font-mono text-[0.84em] px-1.5 py-0.5 rounded;
+  background-color: rgb(var(--surface-3) / 0.9);
+  border: 1px solid rgb(var(--line) / 0.08);
 }
+/* Fenced code blocks stay dark regardless of theme, same as the terminal pane —
+   a light code block reads worse than a dark one embedded in a light page. */
 .lesson-markdown pre {
   @apply bg-[#080b12] border border-white/[0.08] rounded-xl shadow-card overflow-x-auto my-3 relative;
 }
@@ -57,19 +96,19 @@
   @apply font-mono text-[0.85em] leading-relaxed p-4 block;
 }
 .lesson-markdown ul {
-  @apply list-disc list-outside pl-5 text-slate-300 text-sm space-y-1.5 mb-4;
+  @apply list-disc list-outside pl-5 text-ink-2 text-sm space-y-1.5 mb-4;
 }
 .lesson-markdown ol {
-  @apply list-decimal list-outside pl-5 text-slate-300 text-sm space-y-1.5 mb-4;
+  @apply list-decimal list-outside pl-5 text-ink-2 text-sm space-y-1.5 mb-4;
 }
 .lesson-markdown li::marker {
-  @apply text-slate-500;
+  @apply text-ink-faint;
 }
 .lesson-markdown strong {
-  @apply text-slate-100 font-semibold;
+  @apply text-ink font-semibold;
 }
 .lesson-markdown blockquote {
-  @apply border-l-2 border-brand-500/60 bg-brand-500/5 px-4 py-2.5 rounded-r-lg my-3 text-slate-300 text-sm;
+  @apply border-l-2 border-brand-500/60 bg-brand-500/5 px-4 py-2.5 rounded-r-lg my-3 text-ink-2 text-sm;
 }
 
 /* xterm.js custom styling */

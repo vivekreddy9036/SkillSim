@@ -178,12 +178,12 @@ export function LabPage() {
 
   if (!lab) {
     return (
-      <div className="h-[calc(100vh-57px)] flex flex-col items-center justify-center bg-base-950 text-slate-400">
+      <div className="h-[calc(100vh-57px)] flex flex-col items-center justify-center bg-surface-0 text-ink-dim">
         <div className="relative mb-4">
-          <div className="h-10 w-10 rounded-full border-2 border-slate-700 border-t-blue-500 animate-spin" />
+          <div className="h-10 w-10 rounded-full border-2 border-line/30 border-t-blue-500 animate-spin" />
         </div>
-        <p className="text-sm font-medium text-slate-300">Provisioning Ephemeral Sandbox Container...</p>
-        <p className="text-xs text-slate-500 mt-1 font-mono">Allocating CPU, memory, and PTY socket</p>
+        <p className="text-sm font-medium text-ink-2">Provisioning Ephemeral Sandbox Container...</p>
+        <p className="text-xs text-ink-faint mt-1 font-mono">Allocating CPU, memory, and PTY socket</p>
       </div>
     );
   }
@@ -192,40 +192,40 @@ export function LabPage() {
   const isAllComplete = currentStep >= lab.steps.length;
 
   return (
-    <div className="h-[calc(100vh-57px)] flex flex-col bg-base-950 select-none">
+    <div className="h-[calc(100vh-57px)] flex flex-col bg-surface-0 select-none">
       {/* Top Breadcrumb & Control Bar */}
-      <div className="h-12 border-b border-white/[0.08] px-4 sm:px-6 flex items-center justify-between bg-[#0a0d16] shrink-0 z-10">
+      <div className="h-12 border-b border-line/8 px-4 sm:px-6 flex items-center justify-between bg-surface-2 shrink-0 z-10">
         <div className="flex items-center gap-3 min-w-0">
           <Link
             to={`/tracks/${lab.track.slug}`}
-            className="text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors flex items-center gap-1.5"
+            className="text-xs font-medium text-ink-dim hover:text-ink-2 transition-colors flex items-center gap-1.5"
           >
             <span>{lab.track.name}</span>
           </Link>
-          <span className="text-slate-700">/</span>
-          <span className="text-xs font-semibold text-slate-200 truncate">{lab.title}</span>
+          <span className="text-ink-faint">/</span>
+          <span className="text-xs font-semibold text-ink-2 truncate">{lab.title}</span>
           <DifficultyBadge difficulty={lab.difficulty} />
         </div>
 
         {/* Right Session Stats & Status */}
         <div className="flex items-center gap-4 text-xs font-mono">
           {/* Live Stopwatch Timer */}
-          <div className="hidden sm:flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-md border border-white/[0.06] text-slate-400">
+          <div className="hidden sm:flex items-center gap-1.5 bg-surface-2 px-2.5 py-1 rounded-md border border-line/6 text-ink-dim">
             <ClockIcon size={13} className="text-blue-400" />
-            <span className="text-slate-200 font-semibold">{formatTime(secondsElapsed)}</span>
-            <span className="text-slate-600">/ {lab.durationMinutes}m</span>
+            <span className="text-ink-2 font-semibold">{formatTime(secondsElapsed)}</span>
+            <span className="text-ink-faint">/ {lab.durationMinutes}m</span>
           </div>
 
           {/* Stepper Summary */}
-          <div className="flex items-center gap-1.5 bg-slate-900 px-2.5 py-1 rounded-md border border-white/[0.06] text-slate-400">
+          <div className="flex items-center gap-1.5 bg-surface-2 px-2.5 py-1 rounded-md border border-line/6 text-ink-dim">
             <ShieldCheckIcon size={13} className="text-emerald-400" />
-            <span className="text-slate-200 font-semibold">
+            <span className="text-ink-2 font-semibold">
               Step {Math.min(currentStep + 1, lab.steps.length)} of {lab.steps.length}
             </span>
           </div>
 
           {/* WebSocket Connection Pill */}
-          <div className="flex items-center gap-2 bg-slate-900/80 px-2.5 py-1 rounded-md border border-white/[0.06]">
+          <div className="flex items-center gap-2 bg-surface-2/80 px-2.5 py-1 rounded-md border border-line/6">
             <span
               className={`h-2 w-2 rounded-full ${
                 connected
@@ -233,7 +233,7 @@ export function LabPage() {
                   : "bg-amber-400 animate-pulse"
               }`}
             />
-            <span className="text-[11px] text-slate-300 font-medium">
+            <span className="text-[11px] text-ink-2 font-medium">
               {connected ? "Connected" : "Connecting..."}
             </span>
           </div>
@@ -243,7 +243,7 @@ export function LabPage() {
       {/* Main Workspace (Split-Pane with Resizer) */}
       <div
         ref={containerRef}
-        className="flex-1 min-h-0 flex relative overflow-hidden bg-base-950"
+        className="flex-1 min-h-0 flex relative overflow-hidden bg-surface-0"
         style={{ cursor: isDragging ? "col-resize" : "default" }}
       >
         {/* Left: Terminal Shell */}
@@ -263,11 +263,11 @@ export function LabPage() {
         {!isMaximized && (
           <div
             onMouseDown={handleMouseDown}
-            className="w-1.5 hover:w-2 bg-[#0c101a] hover:bg-blue-500/50 active:bg-blue-500 transition-all cursor-col-resize flex items-center justify-center border-x border-white/[0.05] relative group select-none shrink-0"
+            className="w-1.5 hover:w-2 bg-surface-1 hover:bg-blue-500/50 active:bg-blue-500 transition-all cursor-col-resize flex items-center justify-center border-x border-line/5 relative group select-none shrink-0"
             title="Drag to resize console"
           >
             <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-              <GripVerticalIcon size={12} className="text-slate-300" />
+              <GripVerticalIcon size={12} className="text-ink-2" />
             </div>
           </div>
         )}
@@ -275,13 +275,13 @@ export function LabPage() {
         {/* Right: Step Instructions & Verification Console (Hidden if Maximized) */}
         {!isMaximized && (
           <div
-            className="h-full flex-1 flex flex-col min-w-[320px] bg-base-900 border-l border-white/[0.06] overflow-hidden"
+            className="h-full flex-1 flex flex-col min-w-[320px] bg-surface-1 border-l border-line/6 overflow-hidden"
             style={{ width: `${100 - splitPercent}%` }}
           >
             {/* Step Selection Header Stepper */}
-            <div className="px-5 py-3 border-b border-white/[0.06] bg-[#0c101a] shrink-0">
+            <div className="px-5 py-3 border-b border-line/6 bg-surface-1 shrink-0">
               <div className="flex items-center justify-between mb-2">
-                <span className="text-xs font-semibold uppercase tracking-wider text-slate-400 font-mono">
+                <span className="text-xs font-semibold uppercase tracking-wider text-ink-dim font-mono">
                   Task Progression
                 </span>
                 <span className="text-xs text-blue-400 font-mono font-medium">
@@ -304,7 +304,7 @@ export function LabPage() {
                           ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/30"
                           : isCurrent
                             ? "bg-blue-500/20 text-blue-300 border border-blue-500/40 shadow-glow"
-                            : "bg-slate-800/40 text-slate-500 border border-white/[0.04] hover:bg-slate-800/80 hover:text-slate-400"
+                            : "bg-surface-3/40 text-ink-faint border border-line/4 hover:bg-surface-3/80 hover:text-ink-dim"
                       }`}
                     >
                       {isDone ? (
@@ -326,19 +326,19 @@ export function LabPage() {
                   <div className="h-14 w-14 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 mx-auto mb-4">
                     <CheckCircleIcon size={32} />
                   </div>
-                  <h2 className="text-xl font-bold text-slate-100">Lab Completed Successfully</h2>
-                  <p className="text-sm text-slate-400 mt-2 leading-relaxed">
+                  <h2 className="text-xl font-bold text-ink">Lab Completed Successfully</h2>
+                  <p className="text-sm text-ink-dim mt-2 leading-relaxed">
                     All tasks have been verified by the runtime engine. Progress and performance points
                     have been persisted to your student profile.
                   </p>
 
                   <div className="mt-6 grid grid-cols-2 gap-3 text-left">
-                    <div className="bg-slate-900/80 border border-white/[0.06] rounded-xl p-3">
-                      <div className="text-xs text-slate-500 font-mono">Points Awarded</div>
+                    <div className="bg-surface-2/80 border border-line/6 rounded-xl p-3">
+                      <div className="text-xs text-ink-faint font-mono">Points Awarded</div>
                       <div className="text-lg font-bold text-emerald-400 font-mono mt-0.5">+50 XP</div>
                     </div>
-                    <div className="bg-slate-900/80 border border-white/[0.06] rounded-xl p-3">
-                      <div className="text-xs text-slate-500 font-mono">Time Elapsed</div>
+                    <div className="bg-surface-2/80 border border-line/6 rounded-xl p-3">
+                      <div className="text-xs text-ink-faint font-mono">Time Elapsed</div>
                       <div className="text-lg font-bold text-blue-400 font-mono mt-0.5">
                         {formatTime(secondsElapsed)}
                       </div>
@@ -361,7 +361,7 @@ export function LabPage() {
                     <span className="text-xs font-mono font-semibold px-2 py-0.5 rounded bg-blue-500/10 text-blue-400 border border-blue-500/20">
                       Task {step.stepNumber}
                     </span>
-                    <h2 className="text-lg font-bold text-slate-100">{step.title}</h2>
+                    <h2 className="text-lg font-bold text-ink">{step.title}</h2>
                   </div>
 
                   {/* Rendered Markdown Instructions with Code Runner */}
@@ -382,9 +382,9 @@ export function LabPage() {
                           }
 
                           return (
-                            <div className="relative bg-[#080b12] rounded-xl border border-white/[0.08] overflow-hidden my-3 shadow-card">
+                            <div className="relative bg-[#080b12] rounded-xl border border-line/8 overflow-hidden my-3 shadow-card">
                               {/* Code Block Header */}
-                              <div className="flex items-center justify-between px-3 py-1.5 bg-[#0e121d] border-b border-white/[0.06] text-xs font-mono text-slate-400">
+                              <div className="flex items-center justify-between px-3 py-1.5 bg-[#0e121d] border-b border-line/6 text-xs font-mono text-ink-dim">
                                 <span className="flex items-center gap-1.5">
                                   <CodeIcon size={12} className="text-blue-400" />
                                   {match ? match[1] : "bash"}
@@ -405,7 +405,7 @@ export function LabPage() {
                                     type="button"
                                     onClick={() => copyToClipboard(codeText)}
                                     title="Copy to clipboard"
-                                    className="p-1 hover:text-slate-200 hover:bg-slate-800 rounded transition-colors"
+                                    className="p-1 hover:text-ink-2 hover:bg-surface-3 rounded transition-colors"
                                   >
                                     {copiedCode === codeText ? (
                                       <CheckIcon size={13} className="text-emerald-400" />
@@ -415,7 +415,7 @@ export function LabPage() {
                                   </button>
                                 </div>
                               </div>
-                              <pre className="p-3.5 text-xs font-mono overflow-x-auto text-slate-200">
+                              <pre className="p-3.5 text-xs font-mono overflow-x-auto text-ink-2">
                                 <code>{children}</code>
                               </pre>
                             </div>
@@ -428,11 +428,11 @@ export function LabPage() {
                   </div>
 
                   {/* Collapsible Hint Drawer */}
-                  <div className="mt-5 border border-white/[0.08] rounded-xl overflow-hidden bg-[#0c101a]">
+                  <div className="mt-5 border border-line/8 rounded-xl overflow-hidden bg-surface-1">
                     <button
                       type="button"
                       onClick={() => setShowHint(!showHint)}
-                      className="w-full flex items-center justify-between px-4 py-2.5 text-left text-xs font-medium text-slate-400 hover:text-slate-200 transition-colors"
+                      className="w-full flex items-center justify-between px-4 py-2.5 text-left text-xs font-medium text-ink-dim hover:text-ink-2 transition-colors"
                     >
                       <span className="flex items-center gap-2">
                         <HelpCircleIcon size={14} className="text-amber-400" />
@@ -441,7 +441,7 @@ export function LabPage() {
                       {showHint ? <ChevronDownIcon size={14} /> : <ChevronRightIcon size={14} />}
                     </button>
                     {showHint && (
-                      <div className="px-4 py-3 border-t border-white/[0.06] text-xs text-slate-300 bg-slate-900/60 leading-relaxed font-mono">
+                      <div className="px-4 py-3 border-t border-line/6 text-xs text-ink-2 bg-surface-2/60 leading-relaxed font-mono">
                         Verify your syntax with <code className="text-blue-300">docker ps</code> or inspect container logs with{" "}
                         <code className="text-blue-300">docker logs &lt;name&gt;</code> before running the test script.
                       </div>
@@ -449,7 +449,7 @@ export function LabPage() {
                   </div>
 
                   {/* Verification Action Bar */}
-                  <div className="mt-6 pt-5 border-t border-white/[0.06] flex items-center justify-between gap-4">
+                  <div className="mt-6 pt-5 border-t border-line/6 flex items-center justify-between gap-4">
                     <button
                       type="button"
                       onClick={checkStep}
@@ -499,7 +499,7 @@ export function LabPage() {
                         )}
                       </div>
                       {lastResult.message && (
-                        <pre className="mt-2 p-2.5 rounded bg-black/30 border border-white/[0.05] whitespace-pre-wrap text-[11px] text-slate-300">
+                        <pre className="mt-2 p-2.5 rounded bg-black/30 border border-line/5 whitespace-pre-wrap text-[11px] text-ink-2">
                           {lastResult.message}
                         </pre>
                       )}
