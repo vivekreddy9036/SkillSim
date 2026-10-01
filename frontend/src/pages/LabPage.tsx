@@ -25,6 +25,20 @@ const TERM_WS_BASE = import.meta.env.VITE_TERMINAL_WS_BASE ?? "ws://localhost:41
 
 type StepResult = { stepId: string; passed: boolean; message: string };
 
+// rehype-highlight wraps syntax-highlighted tokens in <span> elements, so a code
+// block's `children` is a tree of React nodes, not a string — String(children)
+// falls back to Array.prototype.toString() and turns element objects into the
+// literal text "[object Object]". Walk the tree and keep only the text leaves.
+function getPlainText(node: React.ReactNode): string {
+  if (node === null || node === undefined || typeof node === "boolean") return "";
+  if (typeof node === "string" || typeof node === "number") return String(node);
+  if (Array.isArray(node)) return node.map(getPlainText).join("");
+  if (React.isValidElement(node)) {
+    return getPlainText((node.props as { children?: React.ReactNode }).children);
+  }
+  return "";
+}
+
 export function LabPage() {
   const { slug } = useParams<{ slug: string }>();
   const [lab, setLab] = useState<LabDetail | null>(null);
@@ -360,8 +374,8 @@ export function LabPage() {
                         },
                         code({ className, children, ...props }) {
                           const match = /language-(\w+)/.exec(className || "");
-                          const codeText = String(children).replace(/\n$/, "");
-                          const isInline = !match && !String(children).includes("\n");
+                          const codeText = getPlainText(children).replace(/\n$/, "");
+                          const isInline = !match && !codeText.includes("\n");
 
                           if (isInline) {
                             return <code className={className} {...props}>{children}</code>;
